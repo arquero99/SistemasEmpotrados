@@ -88,7 +88,7 @@ void init_ports(void)
     TRISB = 0;
 }
 
-void __attribute__((__interrupt__,__shadow__))_T1Interrupt(void)
+void __attribute__((__interrupt__,no_auto_psv))_T1Interrupt(void)
 {
     PORTBbits.RB1 = !LATBbits.LATB1;
     TMR1 = 0;
@@ -100,7 +100,7 @@ void init_tmr1(void)
     // Configuración usando Fcyc=79.2576
     T1CONbits.TCS = 1; // Select external clock source
     T1CONbits.TSYNC = 1; // Enable Synchronization
-    T1CONbits.TCKPS = 0b11; // Select 1:1 Prescaler
+    T1CONbits.TCKPS = 0b11; // Select 1:256 Prescaler
     TMR1 = 0x00; // Clear timer register
     PR1 = 30950; // Load the period value
     IPC0bits.T1IP = 0x01; // Set Timer1 Interrupt Priority Level

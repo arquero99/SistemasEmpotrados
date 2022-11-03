@@ -88,16 +88,22 @@ void init_ports(void)
     TRISB = 0;
 }
 
-void __attribute__((__interrupt__,no_auto_psv))_T1Interrupt(void)
+void __attribute__((__interrupt__(no_auto_psv)))_T1Interrupt(void)
 {
     PORTBbits.RB1 = !LATBbits.LATB1;
     TMR1 = 0;
     IFS0bits.T1IF =  0;
 }
+void __attribute__((__interrupt__,(no_auto_psv))) _T3Interrupt(void)
+{
+/* Interrupt Service Routine code goes here */
+IFS0bits.T3IF = 0; //Clear Timer3 interrupt flag
+}
 
 void init_tmr1(void)
 {
     // Configuración usando Fcyc=79.2576
+    /*
     T1CONbits.TCS = 1; // Select external clock source
     T1CONbits.TSYNC = 1; // Enable Synchronization
     T1CONbits.TCKPS = 0b11; // Select 1:256 Prescaler
@@ -107,11 +113,11 @@ void init_tmr1(void)
     IFS0bits.T1IF = 0; // Clear Timer1 Interrupt Flag
     IEC0bits.T1IE = 1; // Enable Timer1 interrupt
     T1CONbits.TON = 1;
+    */
     
-    
-    /* Configuracion usando reloj 32kHz
+    //Configuracion usando reloj 32kHz
     TMR1 = 0x0000;
-    PR1 = 3200; //390
+    PR1 = 30950;//3200; //390
 
     T1CONbits.TSIDL = 0;
     T1CONbits.TGATE = 0;
@@ -123,8 +129,25 @@ void init_tmr1(void)
     IEC0bits.T1IE =  1;// Enable T1 interrupts 
 
     T1CONbits.TON =  1;// Start timer 
-    */
-    
+}
+
+void init_tmr23(void){
+T3CONbits.TON = 0; // Stop any 16-bit Timer3 operation
+T2CONbits.TON = 0; // Stop any 16/32-bit Timer3 operation
+T2CONbits.T32 = 1; // Enable 32-bit Timer mode
+T2CONbits.TCS = 0; // Select internal instruction cycle clock 
+T2CONbits.TGATE = 0; // Disable Gated Timer mode
+T2CONbits.TCKPS = 0b00// Select 1:1 Prescaler
+TMR3 = 0x00; // Clear 32-bit Timer (msw)
+TMR2 = 0x00; // Clear 32-bit Timer (lsw)
+PR3 = 0x0002; // Load 32-bit period value (msw)
+PR3 = 0x0000; // Load 32-bit period value (lsw)
+IFS0bits.T3IP = 0x01; // Set Timer3 Interrupt Priority Level
+IFS0bits.T3IF = 0; // Clear Timer3 Interrupt Flag
+IEC0bits.T3IE = 1; // Enable Timer3 interrupt
+T2CONbits.TON = 1; // Start 32-bit Timer
+/* Example code for Timer3 ISR*/
+
 }
 
 int main(void) 

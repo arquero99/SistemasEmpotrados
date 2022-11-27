@@ -35,8 +35,8 @@
 #pragma config FCKSM = CSECMD           // Clock Switching and Monitor (Both Clock Switching and Fail-Safe Clock Monitor are disabled)
 
 // FWDT
-#pragma config WDTPOST = 0b1101         // Watchdog Timer Postscaler (1:32,768)
-#pragma config WDTPRE = 1               // WDT Prescaler (1:128)
+#pragma config WDTPOST = 0b1000        // Watchdog Timer Postscaler (1:32,768)
+#pragma config WDTPRE = 0           // WDT Prescaler (1:128)
 #pragma config WINDIS = OFF             // Watchdog Timer Window (Watchdog Timer in Non-Window mode)
 #pragma config FWDTEN = 1             // Watchdog Timer Enable (Watchdog timer enabled/disabled by user software)
 

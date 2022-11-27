@@ -147,28 +147,26 @@ void init_uart(void)
 
 void init_ADC(void)
 {
-    AD1CON1bits.AD12B = 0; /* 10 bit conversiï¿½n */
-    AD1CON2bits.VCFG = 0; /* Vdd and Vss as voltage references */
-    AD1CON3bits.ADRC = 0; /* clock derived from system clock */
-    AD1CON3bits.ADCS = 78; /* Clock for a TAD of 2 us */
-    AD1CHS0bits.CH0SA = 0b00010; /* Channel 0 positive input as AN2 */
-    AD1CHS0bits.CH0NA = 0; /* Channel 0 negative input as -Vref */
-    //Añadir otros canales? Actualmente solo utiliza ch0
-    AD1CON2bits.CHPS = 0; /* Channel 0 selected for sample and conversion */
-    AD1CON2bits.CSCNA = 0; /* Do not scan inputs */
-    AD1CON1bits.ASAM = 0; /* Sample begins when SAMP bit is set */
-    AD1CON1bits.SAMP = 0; //OpAmp Holding, not sampling
-    AD1CON1bits.SSRC = 0; /* Clearing sample bit ends sampling and start conversion */
-    AD1CON1bits.FORM = 0; /* Output format = integer */
-    AD1CON2bits.BUFM = 0; /* Always starts filling buffer at address 0 */
-    AD1CON2bits.ALTS = 0; /* Always uses channel input selects for Sample A */
-    AD1CON2bits.SMPI = 0; /* One conversion per interrupt */
+AD1CON1bits.AD12B = 0; /* 10 bit conversi?n */
+AD1CON2bits.VCFG = 0; /* Vdd and Vss as voltage references */
+AD1CON3bits.ADRC = 0 ; /* clock derived from system clock */
+AD1CON3bits.ADCS = 2; /* Clock for a TAD of 2 us */
+AD1CHS0bits.CH0SA = 0; /* Channel 0 positive input as AN2 */
+AD1CHS0bits.CH0NA = 0; /* Channel 0 negative input as -Vref */
+AD1CON2bits.CHPS = 0; /* Channel 0 selected for sample and conversion CAMBIAR EN VERSION CON VARIOS CANALES*/
+AD1CON2bits.CSCNA = 0 ; /* Do not scan inputs PROBAR */
+AD1CON1bits.ASAM = 0; /* Sample begins when SAMP bit is set */
+AD1CON1bits.SAMP = 0;
+AD1CON1bits.SSRC = 0; /* Clearing sample bit ends sampling and start conversion */
+AD1CON1bits.FORM = 0; /* Output format = integer */
+AD1CON2bits.BUFM = 0; /* Always starts filling buffer at address 0 */
+AD1CON2bits.ALTS = 0; /* Always uses channel input selects for Sample A */
+AD1CON2bits.SMPI = 0; /* One conversion per interrupt */
+IPC3bits.AD1IP = 7;
+IEC0bits.AD1IE = 1;
+IFS0bits.AD1IF = 0;
 
-    IPC3bits.AD1IP = 7;
-    IEC0bits.AD1IE = 1;
-    IFS0bits.AD1IF = 0;
-
-    AD1CON1bits.ADON = 1; /* Start ADC module */
+AD1CON1bits.ADON = 1;
 }
 
 void init_tmr1(void)
@@ -193,6 +191,22 @@ void putch(char c)
     U1TXREG = c;
  }
 
+void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
+{
+    ADC_finished = 1;
+    ADC_result = ADCBUF0;
+    IFS0bits.AD1IF = 0; //
+       
+    return;
+}
+
+void __attribute__((__interrupt__, no_auto_psv)) _T1Interrupt(void)
+{    
+    T1_int = 1;
+    IFS0bits.T1IF = 0;	/* Clear interrupt flag */
+    return;
+}
+
 int main(void) 
 {
     init_micro();
@@ -208,54 +222,50 @@ int main(void)
     ADC_finished = 0;
     T1_int = 0;
     
-    
     while(1)
     {
-        AD1CHS0bits.CH0SA = channel; // Potentiometer
         while(!T1_int); //Wait timer 1
         /* Start sampling */
-        AD1CON1bits.SAMP = 1; 
-
-        /* Wait adquisition (R = 3250 Ohm, C = 4.4 pF */
-        /* They are only needed 3 Tcy but 12 Tcy are de minumum for delay32 */
-        __delay32(12);
-
-        /* Start conversion */
-        AD1CON1bits.SAMP = 0;
         
-        while(!ADC_finished);
-        ADC_finished = 0;
-        switch(channel){
-            case 0://Temperatura
-               printf("\r\nTemperatura: ");
-               printf("%d", ADC_result);
-            case 1://Light
-               printf("\r\nLuz: ");
-               printf("%d", ADC_result);
-            case 2://Temperatura
-               printf("\r\nPotenciometro: ");
-               printf("%d", ADC_result);
-               channel=0;
-        }
         T1_int = 0;
+        
+        for (channel = 0; channel < 3; channel++){
+            AD1CHS0bits.CH0SA = channel;
+            __delay32(40); //Aprox 1us
+            AD1CON1bits.SAMP = 1; 
+            
+            /* Wait adquisition (R = 3250 Ohm, C = 4.4 pF */
+            /* They are only needed 3 Tcy but 12 Tcy are de minumum for delay32 */
+            __delay32(12);
+                   
+            /* Start conversion */
+            AD1CON1bits.SAMP = 0;
+    
+
+            while(!ADC_finished);
+            ADC_finished = 0;
+            switch(channel){
+                case 0: 
+                    printf("Temperatura: ");
+                    break;
+                case 1: 
+                    printf("Luminosidad: ");
+                    break;
+                case 2: 
+                    printf("Potenciometro: ");
+                    break;
+                default: 
+                    printf("Invalid Channel");
+            }
+            printf("%d", ADC_result);
+            printf("\r\n");
+           }
+        printf("**************************************");
+        printf("\r\n");
+        }
+         return 0;
     }
-    
-    return 0;
-}
+   
 
-void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
-{
-    ADC_finished = 1;
-    ADC_result = ADCBUF0;
-    
-    IFS0bits.AD1IF = 0; //
-    return;
-}
 
-void __attribute__((__interrupt__, no_auto_psv)) _T1Interrupt(void)
-{    
-    T1_int = 1;
-    IFS0bits.T1IF = 0;	/* Clear interrupt flag */
-    return;
-}
 

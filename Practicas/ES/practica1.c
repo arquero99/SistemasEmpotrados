@@ -35,10 +35,10 @@
 #pragma config FCKSM = CSECMD           // Clock Switching and Monitor (Both Clock Switching and Fail-Safe Clock Monitor are disabled)
 
 // FWDT
-#pragma config WDTPOST = 0b1101         // Watchdog Timer Postscaler (1:32,768)
-#pragma config WDTPRE = 1               // WDT Prescaler (1:128)
+#pragma config WDTPOST = PS4096        // Watchdog Timer Postscaler (1:32,768)
+#pragma config WDTPRE = PR128           // WDT Prescaler (1:128)
 #pragma config WINDIS = OFF             // Watchdog Timer Window (Watchdog Timer in Non-Window mode)
-#pragma config FWDTEN = 1             // Watchdog Timer Enable (Watchdog timer enabled/disabled by user software)
+#pragma config FWDTEN = OFF             // Watchdog Timer Enable (Watchdog timer enabled/disabled by user software)
 
 // FPOR
 #pragma config FPWRT = PWR128           // POR Timer Value (128ms)
@@ -60,7 +60,7 @@
 
 void init_micro(void)
 {
-    RCONbits.SWDTEN = 1; // Disable Watchdog Timer
+    RCONbits.SWDTEN = 0; // Disable Watchdog Timer
 
     // Configure Oscillator to operate the device at 40 Mhz
     // Fosc = Fin*M/(N1*N2), Fcy = Fosc/2
@@ -95,7 +95,6 @@ int main(void)
     
     while(1)
     {
-        Sleep(); //Entra en el modo de bajo consumo profundo
         PORTBbits.RB1 = !LATBbits.LATB1;
     }
     

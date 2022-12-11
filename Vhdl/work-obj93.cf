@@ -1,10 +1,16 @@
 v 4
-file . "biestable.vhdl" "5529d483f208729d51d032493276d59480adcbc7" "20221126123528.404":
-  entity biestable at 1( 0) + 0 on 13;
-  architecture behaviour_biestable of biestable at 12( 187) + 0 on 14;
-file . "sumador.vhdl" "550ac2690c38ec5e130d52c03dc5012ba85e2aa9" "20221126125122.445":
-  entity sumador at 1( 0) + 0 on 17;
-  architecture behaviour_sumador of sumador at 14( 241) + 0 on 18;
-file . "SR.vhdl" "e7a990c4465b0762c7f2ac51143d040d4e216cd9" "20221126124041.407":
-  entity sr at 1( 0) + 0 on 15;
-  architecture behaviour_sr of sr at 12( 175) + 0 on 16;
+file . "main.vhdl" "c87f0ac936b5e6d3b36f356becb7baa9fd607c83" "20221211200927.335":
+  entity main at 1( 0) + 0 on 43;
+  architecture behaviour of main at 6( 69) + 0 on 44;
+file . "SR.vhdl" "e7a990c4465b0762c7f2ac51143d040d4e216cd9" "20221211191009.844":
+  entity sr at 1( 0) + 0 on 23;
+  architecture behaviour_sr of sr at 12( 175) + 0 on 24;
+file . "sumador.vhdl" "64e0317e15873a94200f6d6638883f18f75102e1" "20221211200828.743":
+  entity sumador at 1( 0) + 0 on 37;
+  architecture behaviour_sumador of sumador at 14( 241) + 0 on 38;
+file . "biestable.vhdl" "5529d483f208729d51d032493276d59480adcbc7" "20221211191001.819":
+  entity biestable at 1( 0) + 0 on 21;
+  architecture behaviour_biestable of biestable at 12( 187) + 0 on 22;
+file . "sumador_4b.vhdl" "8e999fc5eeb541af878b75684a086cc2723dc327" "20221211200915.432":
+  entity sumador_4b at 1( 0) + 0 on 41;
+  architecture estructural_s4b of sumador_4b at 12( 237) + 0 on 42;

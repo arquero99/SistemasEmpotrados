@@ -12,15 +12,7 @@ end entity sumador;
 
 
 architecture behaviour_sumador of sumador is
-    signal AB: std_logic;
-    signal AC: std_logic;
-    signal BC: std_logic;
 begin 
    S <= A xor B xor C_in;
-   
-   AB <= A and B;
-   AC <= A and C_in;
-   BC <= B and C_in;
-   
-   C_out <= AB or AC or BC;
+   C_out <= (A and B) or (A and C_in) or (B and C_in);
 end architecture;

@@ -1,0 +1,10 @@
+v 4
+file . "biestable.vhdl" "5529d483f208729d51d032493276d59480adcbc7" "20221126123528.404":
+  entity biestable at 1( 0) + 0 on 13;
+  architecture behaviour_biestable of biestable at 12( 187) + 0 on 14;
+file . "sumador.vhdl" "550ac2690c38ec5e130d52c03dc5012ba85e2aa9" "20221126125122.445":
+  entity sumador at 1( 0) + 0 on 17;
+  architecture behaviour_sumador of sumador at 14( 241) + 0 on 18;
+file . "SR.vhdl" "e7a990c4465b0762c7f2ac51143d040d4e216cd9" "20221126124041.407":
+  entity sr at 1( 0) + 0 on 15;
+  architecture behaviour_sr of sr at 12( 175) + 0 on 16;

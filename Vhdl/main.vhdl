@@ -38,21 +38,21 @@ begin
   begin
     loop
       in_a <= '1';
-      in_b <= '1';
-      input_sc <= '1';
-      wait for 10 ns;
-
-      in_a <= '0';
-      in_b <= '1';
-      input_sc <= '1';
-      wait for 10 ns;
-
-      in_a <= '0';
       in_b <= '0';
       input_sc <= '1';
       wait for 10 ns;
 
+      in_a <= '0';
+      in_b <= '1';
+      input_sc <= '1';
+      wait for 10 ns;
+
       in_a <= '1';
+      in_b <= '1';
+      input_sc <= '1';
+      wait for 10 ns;
+
+      in_a <= '0';
       in_b <= '0';
       input_sc <= '1';
       wait for 10 ns;

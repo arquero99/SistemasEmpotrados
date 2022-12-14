@@ -10,13 +10,11 @@ end entity biestable;
 
 
 architecture behaviour_biestable of biestable is
-    signal registro: std_logic := '0';
 begin 
         process (clock)
         begin 
             if(clock'event and clock='1') then 
-                Q <= registro;
-                registro <= D;
+                Q <= D;
             end if;
         end process;
     
